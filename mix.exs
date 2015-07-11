@@ -29,7 +29,7 @@ defmodule ESpider.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:chronos, github: "nurugger07/chronos"},
+      {:calendar, "~> 0.7.0"},
       {:eredis, github: "wooga/eredis"},
       {:floki, "~> 0.3.2"},
       {:httpotion, "~> 2.1.0"},
