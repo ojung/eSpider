@@ -4,7 +4,8 @@ defmodule HTTPHandler do
   import HyperlinkHelpers
   require Logger
 
-  def fetch(url) do
+  def fetch(_, 3), do: {:error, [message: "Possible redirect loop detected"]}
+  def fetch(url, tries) do
     try do
       HTTPotion.get(url, [headers: ["Accept": "text/html"]])
     rescue
@@ -13,14 +14,14 @@ defmodule HTTPHandler do
         {:error, :timeout}
     else
       response ->
-        handle_response(response, url)
+        handle_response(response, url, tries + 1)
     end
   end
 
-  defp handle_response(response, url) do
+  defp handle_response(response, url, tries) do
     if (response != nil) do
       if (response.status_code == 301 || response.status_code == 302) do
-        follow_redirect(response, url)
+        follow_redirect(response, url, tries)
       else
         {:ok, response}
       end
@@ -29,12 +30,12 @@ defmodule HTTPHandler do
     end
   end
 
-  defp follow_redirect(response, url) do
+  defp follow_redirect(response, url, tries) do
     new_location = response.headers[:Location]
     #TODO: Only follow redirect if should_crawl? == true
-    if (new_location != nil && valid_link?(new_location)) do
+    if (new_location != nil && new_location |> valid_link?) do
       Logger.debug("Following redirect: " <> new_location <> " from: " <> url)
-      fetch(remove_params(new_location))
+      new_location |> get_root |> fetch(tries)
     end
   end
 end
