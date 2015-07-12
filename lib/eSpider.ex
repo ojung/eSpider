@@ -5,7 +5,8 @@ defmodule ESpider do
       "https://www.reddit.com/",
       "https://news.ycombinator.com",
       "https://www.github.com",
-      "https://stackoverflow.com"
+      "https://stackoverflow.com",
+      "https://wikipedia.com"
     ]
     {:ok, cache} = Cache.start_link
     {:ok, p} = Task.start(Crawler, :loop, [cache])
