@@ -51,7 +51,7 @@ defmodule Crawler do
   defp extract_content(url, response, cache) do
     headlines = Floki.find(response.body, "h1")
     one_day_in_seconds = 60 * 60 * 24
-    Cache.put_if_not_exists(cache, url, %{
+    Cache.put(cache, url, %{
       :ttl => DateTime.now_utc |> DateTime.advance!(one_day_in_seconds),
       :headlines => headlines
     })
@@ -61,8 +61,8 @@ defmodule Crawler do
   def get_links(body) do
     Floki.find(body, "a")
     |> Enum.map(&get_href/1)
+    |> Enum.map(&get_root/1)
     |> Enum.filter(&valid_link?/1)
-    |> Enum.map(&remove_params/1)
     |> Enum.uniq
   end
 end

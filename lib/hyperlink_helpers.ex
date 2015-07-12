@@ -8,8 +8,11 @@ defmodule HyperlinkHelpers do
     href
   end
 
-  def remove_params(url) do
-    url |> String.split("?", trim: true) |> List.first
+  def get_root(url) do
+    matches = Regex.run(~r/https?\:\/\/([^\/:?#]+)(?:[\/:?#]|$)/, url)
+    if (matches) do
+      matches |> List.first
+    end
   end
 
   def valid_link?(url) do
