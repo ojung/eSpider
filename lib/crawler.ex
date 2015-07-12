@@ -9,7 +9,7 @@ defmodule Crawler do
     me = self
     receive do
       {:links, links} ->
-        Enum.each(links, &Task.start(__MODULE__, :crawl, [&1, cache, me, 0]))
+        links |> Enum.each(&Task.start(__MODULE__, :crawl, [&1, cache, me, 0]))
         loop(cache)
       {:error, [message: message]} ->
         Logger.warn("received error: " <> message)
@@ -22,10 +22,10 @@ defmodule Crawler do
   end
 
   defp should_crawl?(url, cache) do
-    case Cache.get(cache, url) do
+    case cache |> Cache.get(url) do
       {:ok, :undefined} -> true
       {:ok, existing} ->
-        %{:ttl => ttl} = :erlang.binary_to_term(existing)
+        %{:ttl => ttl} = existing |> :erlang.binary_to_term
         ttl < DateTime.now_utc
       _ -> false
     end
@@ -33,8 +33,8 @@ defmodule Crawler do
 
   def crawl(_, _, _, 5), do: :ok
   def crawl(url, cache, parent, tries) do
-    if (should_crawl?(url, cache)) do
-      case HTTPHandler.fetch(url) do
+    if (url |> should_crawl?(cache)) do
+      case url |> HTTPHandler.fetch(0) do
         {:ok, res} ->
           extract_content(url, res, cache)
           send(parent, {:links, get_links(res.body)})

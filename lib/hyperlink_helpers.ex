@@ -18,12 +18,12 @@ defmodule HyperlinkHelpers do
 
   defp syntax_correct?(url) do
     regex = ~r/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#&\/\/=]*)/
-    Regex.match?(regex, url)
+    url != nil && Regex.match?(regex, url)
   end
 
   defp no_media?(url) do
-    not String.contains?(url, [
-      ".png", ".jpg", ".gifv", ".mp4", ".swf", ".wmv", ".gif"
-    ])
+    not (url |> String.contains?([
+      ".png", ".jpg", ".JPG", ".gifv", ".mp4", ".swf", ".wmv", ".gif"
+    ]))
   end
 end
