@@ -7,15 +7,13 @@ defmodule Crawler do
 
   def loop(cache) do
     me = self
+    #TODO: Add {:ok, :timeout} and {:warning, message} handlers
     receive do
       {:links, links} ->
         links |> Enum.each(&Task.start(__MODULE__, :crawl, [&1, cache, me, 0]))
         loop(cache)
       {:error, [message: message]} ->
         Logger.warn("received error: " <> message)
-        loop(cache)
-      {:error, _} ->
-        Logger.warn("received error")
         loop(cache)
       _ -> loop(cache)
     end

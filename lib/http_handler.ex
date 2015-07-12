@@ -4,7 +4,10 @@ defmodule HTTPHandler do
   import HyperlinkHelpers
   require Logger
 
-  def fetch(_, 3), do: {:error, [message: "Possible redirect loop detected"]}
+  def fetch(url, 3) do
+    {:error, [message: "Possible redirect loop detected for: " <> url]}
+  end
+
   def fetch(url, tries) do
     try do
       HTTPotion.get(url, [headers: ["Accept": "text/html"]])
