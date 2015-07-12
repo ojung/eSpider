@@ -21,16 +21,6 @@ defmodule Crawler do
     end
   end
 
-  defp should_crawl?(url, cache) do
-    case cache |> Cache.get(url) do
-      {:ok, :undefined} -> true
-      {:ok, existing} ->
-        %{:ttl => ttl} = existing |> :erlang.binary_to_term
-        ttl < DateTime.now_utc
-      _ -> false
-    end
-  end
-
   def crawl(_, _, _, 5), do: :ok
   def crawl(url, cache, parent, tries) do
     if (url |> should_crawl?(cache)) do
@@ -45,6 +35,16 @@ defmodule Crawler do
         _ ->
           Logger.debug("Can not crawl: " <> url)
       end
+    end
+  end
+
+  defp should_crawl?(url, cache) do
+    case cache |> Cache.get(url) do
+      {:ok, :undefined} -> true
+      {:ok, existing} ->
+        %{:ttl => ttl} = existing |> :erlang.binary_to_term
+        ttl < DateTime.now_utc
+      _ -> false
     end
   end
 
