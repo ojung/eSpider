@@ -47,7 +47,8 @@ defmodule Crawler do
   end
 
   defp extract_content(url, response, cache) do
-    headlines = Floki.find(response.body, "h1")
+    tags = ["h1", "h2", "h3", "h4", "h5"]
+    headlines = tags |> Enum.map(&Floki.find(response.body, &1))
     one_day_in_seconds = 60 * 60 * 24
     Cache.put(cache, url, %{
       :ttl => DateTime.now_utc |> DateTime.advance!(one_day_in_seconds),
