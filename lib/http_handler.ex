@@ -38,7 +38,7 @@ defmodule HTTPHandler do
     #TODO: Only follow redirect if should_crawl? == true
     if (new_location != nil && new_location |> valid_link?) do
       Logger.debug("Following redirect: " <> new_location <> " from: " <> url)
-      new_location |> get_root |> fetch(tries)
+      new_location |> fetch(tries)
     end
   end
 end
