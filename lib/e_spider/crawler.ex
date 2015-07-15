@@ -33,14 +33,6 @@ defmodule ESpider.Crawler do
     |> Enum.uniq
   end
 
-  defp should_crawl?(url, cache) do
-    case cache |> ESpider.Cache.get(url) do
-      {:ok, :undefined} -> true
-      {:ok, ttl} -> ttl < DateTime.now_utc
-      _ -> false
-    end
-  end
-
   defp extract_content(url, response) do
     tags = ["h1", "h2", "h3", "h4", "h5"]
     headlines = tags |> Enum.map(&Floki.find(response.body, &1))

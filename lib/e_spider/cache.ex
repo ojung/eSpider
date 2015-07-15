@@ -1,4 +1,6 @@
 defmodule ESpider.Cache do
+  use Calendar
+
   def start_link do
     :eredis.start_link
   end
@@ -17,6 +19,16 @@ defmodule ESpider.Cache do
 
   def delete(cache, key) do
     :eredis.q(cache, ["DEL", key])
+  end
+
+  def should_crawl?(cache, url) do
+    case cache |> get(url) do
+      {:ok, :undefined} -> true
+      {:ok, binary} ->
+        ttl = binary |> :erlang.binary_to_term
+        ttl < DateTime.now_utc
+      _ -> false
+    end
   end
 end
 
