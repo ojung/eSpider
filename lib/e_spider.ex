@@ -8,9 +8,9 @@ defmodule ESpider do
       "https://stackoverflow.com",
       "https://wikipedia.com"
     ]
-    {:ok, cache} = Cache.start_link
-    {:ok, p} = Task.start(Crawler, :loop, [cache])
-    Enum.each(seeds, &Task.start(Crawler, :crawl, [&1, cache, p, 0]))
+    {:ok, cache} = ESpider.Cache.start_link
+    {:ok, p} = Task.start(ESpider.Crawler, :loop, [cache])
+    Enum.each(seeds, &Task.start(ESpider.Crawler, :crawl, [&1, cache, p, 0]))
 
   end
 end

@@ -1,4 +1,4 @@
-defmodule Cache do
+defmodule ESpider.Cache do
   def start_link do
     :eredis.start_link
   end

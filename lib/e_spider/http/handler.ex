@@ -1,7 +1,7 @@
-defmodule HTTPHandler do
+defmodule ESpider.HTTP.Handler do
   @moduledoc false
 
-  import HyperlinkHelpers
+  import ESpider.HTTP.HyperlinkHelpers
   require Logger
 
   def fetch(url, 3) do

@@ -1,4 +1,4 @@
-defmodule HyperlinkHelpers do
+defmodule ESpider.HTTP.HyperlinkHelpers do
   @moduledoc false
 
   def get_href({_, attrs, _}) do
@@ -9,7 +9,7 @@ defmodule HyperlinkHelpers do
   end
 
   def get_root(url) do
-    matches = Regex.run(~r/https?\:\/\/([^\/:?#]+)(?:[\/:?#]|$)/, url)
+    matches = Regex.run(~r/https?\:\/\/([^\/:?#]+)/, url)
     if (matches) do
       matches |> List.first
     end
