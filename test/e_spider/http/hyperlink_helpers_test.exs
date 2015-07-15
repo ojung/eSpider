@@ -1,5 +1,6 @@
 defmodule HyperlinkHelpersTest do
   use ExUnit.Case, async: true
+
   import ESpider.HTTP.HyperlinkHelpers
 
   test "get href from a html anchor element" do

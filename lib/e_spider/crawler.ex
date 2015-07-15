@@ -6,22 +6,24 @@ defmodule ESpider.Crawler do
     #Add urls to the queue in an asynchronous fashion.
 
   import ESpider.HTTP.HyperlinkHelpers
+  import ESpider.HTTP.Handler
+  import ESpider.Cache
+
   require Logger
+
   use Calendar
 
   def crawl(_, _, _, 5), do: :ok
-  def crawl(url, cache, parent, tries) do
-    if (url |> should_crawl?(cache)) do
-      case url |> ESpider.HTTP.Handler.fetch(0) do
+  def crawl(url, cache, tries) do
+    if (cache |> should_crawl?(url)) do
+      case fetch(url, 0) do
         {:ok, res} ->
           extract_content(url, res)
           one_day_in_seconds = 60 * 60 * 24
           ttl = DateTime.now_utc |> DateTime.advance!(one_day_in_seconds)
-          ESpider.Cache.put(cache, url, ttl)
+          cache |> put(url, ttl)
           {:links, get_links(res.body)}
-        {:error, :timeout} -> crawl(url, cache, parent, tries + 1)
-        {:error, exception} -> {:error, exception}
-        _ -> Logger.debug("Can not crawl: " <> url)
+        otherwise -> otherwise
       end
     end
   end

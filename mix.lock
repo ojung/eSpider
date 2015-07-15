@@ -1,6 +1,8 @@
 %{"calendar": {:hex, :calendar, "0.7.0"},
   "chronos": {:git, "git://github.com/nurugger07/chronos.git", "289463a917ddbe1a22d451b5ab01299665ee9cfc", []},
   "eredis": {:git, "git://github.com/wooga/eredis.git", "770f828918db710d0c0958c6df63e90a4d341ed7", []},
+  "excoveralls": {:hex, :excoveralls, "0.3.10"},
+  "exjsx": {:hex, :exjsx, "3.1.0"},
   "floki": {:hex, :floki, "0.3.2"},
   "getopt": {:git, "https://github.com/jcomellas/getopt", "388dc95caa7fb97ec7db8cfc39246a36aba61bd8", [tag: "v0.8.2"]},
   "hackney": {:hex, :hackney, "1.2.0"},
@@ -8,6 +10,9 @@
   "httpotion": {:hex, :httpotion, "2.1.0"},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "d2e369ff42666c3574b8b7ec26f69027895c4d94", [tag: "v4.1.1"]},
   "idna": {:hex, :idna, "1.0.2"},
+  "jsx": {:hex, :jsx, "2.4.0"},
+  "meck": {:hex, :meck, "0.8.3"},
   "mochiweb": {:hex, :mochiweb, "2.12.2"},
+  "mock": {:hex, :mock, "0.1.1"},
   "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
   "tzdata": {:hex, :tzdata, "0.1.6"}}

@@ -8,6 +8,7 @@ defmodule ESpider.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: ESpider],
+     test_coverage: [tool: ExCoveralls],
      deps: deps]
   end
 
@@ -34,9 +35,11 @@ defmodule ESpider.Mixfile do
     [
       {:calendar, "~> 0.7.0"},
       {:eredis, github: "wooga/eredis"},
+      {:excoveralls, "~> 0.3", only: :test},
       {:floki, "~> 0.3.2"},
       {:httpotion, "~> 2.1.0"},
-      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.1"}
+      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.1"},
+      {:mock, "~> 0.1.1"}
     ]
   end
 end

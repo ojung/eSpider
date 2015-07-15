@@ -17,7 +17,7 @@ defmodule ESpider.HTTP.Handler do
         {:error, :timeout}
     else
       response ->
-        handle_response(response, url, tries + 1)
+        handle_response(response, url, tries)
     end
   end
 
@@ -38,7 +38,7 @@ defmodule ESpider.HTTP.Handler do
     #TODO: Only follow redirect if should_crawl? == true
     if (new_location != nil && new_location |> valid_link?) do
       Logger.debug("Following redirect: " <> new_location <> " from: " <> url)
-      new_location |> fetch(tries)
+      new_location |> fetch(tries + 1)
     end
   end
 end
