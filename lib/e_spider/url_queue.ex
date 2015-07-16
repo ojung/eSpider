@@ -1,4 +1,6 @@
 defmodule ESpider.URLQueue do
+  @moduledoc false
+
   import List, only: [first: 1, delete_at: 2]
 
   def start_link do
@@ -14,5 +16,8 @@ defmodule ESpider.URLQueue do
       {first(queue), delete_at(queue, 0)}
     end)
   end
-end
 
+  def read_urls do
+    Agent.get(__MODULE__, &(&1))
+  end
+end

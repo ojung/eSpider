@@ -1,20 +1,21 @@
 defmodule ESpider.CrawlerTest do
-  import ESpider.Crawler
+  alias ESpider.Crawler
+  alias ESpider.Cache
   import Mock
 
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   @some_url "http://test.de"
   @another_url "http://anotherlink.com"
   @old_location "http://old-location.com"
 
-  setup do
-    {:ok, cache} = ESpider.Cache.start_link
-    {:ok, _} = cache |> :eredis.q(["FLUSHALL"])
-    {:ok, cache: cache}
+  setup _context do
+    {:ok, redis} = :eredis.start_link
+    {:ok, _} = redis |> :eredis.q(["FLUSHALL"])
+    :ok
   end
 
-  test "extract links", %{cache: cache} do
+  test "extract links" do
     html = ~s"""
       <html><body>
       <a href=#{@some_url}>asd</a>
@@ -23,18 +24,18 @@ defmodule ESpider.CrawlerTest do
     """
     with_mock HTTPotion, [get: &TestHelpers.respond_body(&1, &2, html)] do
       expected = {:links, [@some_url, @another_url]}
-      assert(crawl("http://example.com", cache, 0) == expected)
+      assert(Task.await(Crawler.crawl!("http://example.com")) == expected)
     end
   end
 
-  test "error handling", %{cache: cache} do
+  test "error handling" do
     with_mock HTTPotion, [
       get: &TestHelpers.redirect_response(&1, &2, @old_location)
     ] do
       expected = {:error, [
           message: "Possible redirect loop detected for: #{@old_location}"
         ]}
-      assert(crawl(@old_location, cache, 0) == expected)
+      assert(Task.await(Crawler.crawl!(@old_location)) == expected)
     end
   end
 end

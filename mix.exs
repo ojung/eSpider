@@ -17,7 +17,7 @@ defmodule ESpider.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [
-      #mod: {ESpider, []},
+      mod: {ESpider, []},
       applications: [:logger, :httpotion]
     ]
   end
@@ -34,6 +34,8 @@ defmodule ESpider.Mixfile do
   defp deps do
     [
       {:calendar, "~> 0.7.0"},
+      {:dialyze, "~> 0.2.0"},
+      {:dogma, "~> 0.0.2"},
       {:eredis, github: "wooga/eredis"},
       {:excoveralls, "~> 0.3", only: :test},
       {:floki, "~> 0.3.2"},

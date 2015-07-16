@@ -1,35 +1,37 @@
 defmodule ESpider.CacheTest do
-  import ESpider.Cache
+  alias ESpider.Cache
 
   use ExUnit.Case, async: true
   use Calendar
 
-  setup do
-    {:ok, cache} = start_link
-    {:ok, _} = cache |> :eredis.q(["FLUSHALL"])
-    {:ok, cache: cache}
+  @cache_name ESpider.Cache
+
+  setup _context do
+    {:ok, direct_redis} = :eredis.start_link
+    {:ok, _} = direct_redis |> :eredis.q(["FLUSHALL"])
+    :ok
   end
 
-  test "store values by key", %{cache: cache} do
-    assert(cache |> get("key1") == {:ok, :undefined})
-    {:ok, _} = cache |> put("key1", "value1")
-    assert(cache |> get("key1") == {:ok, "value1"})
+  test "store values by key" do
+    assert(Cache.get("key1") == :undefined)
+    Cache.put("key1", "value1")
+    assert(Cache.get("key1") == "value1")
   end
 
-  test "delete values by key", %{cache: cache} do
-    {:ok, _} = cache |> put("del", "eteme")
-    {:ok, _} = cache |> delete("del")
-    assert(cache |> get("del") == {:ok, :undefined})
+  test "delete values by key"  do
+    Cache.put("del", "eteme")
+    Cache.delete("del")
+    assert(Cache.get("del") == :undefined)
   end
 
-  test "should crawl", %{cache: cache} do
-    {:ok, _} = cache |> put("key1", DateTime.now_utc |> DateTime.advance!(-1))
-    assert(cache |> should_crawl?("key1"))
+  test "should crawl"  do
+    Cache.put("key1", DateTime.now_utc |> DateTime.advance!(-1))
+    assert(Cache.should_crawl?("key1"))
   end
 
-  test "should not crawl", %{cache: cache} do
+  test "should not crawl"  do
     ttl = 60 * 60
-    {:ok, _} = cache |> put("key1", DateTime.now_utc |> DateTime.advance!(ttl))
-    assert(not should_crawl?(cache, "key1"))
+    Cache.put("key1", DateTime.now_utc |> DateTime.advance!(ttl))
+    assert(not Cache.should_crawl?("key1"))
   end
 end

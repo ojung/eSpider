@@ -2,11 +2,6 @@ defmodule URLQueueTest do
   use ExUnit.Case, async: true
   import ESpider.URLQueue
 
-  setup do
-    {:ok, queue} = start_link
-    {:ok, queue: queue}
-  end
-
   test "push values" do
     assert read_url == nil
     url = "url"

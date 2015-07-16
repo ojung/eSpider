@@ -1,30 +1,33 @@
 defmodule ESpider.Crawler do
   @moduledoc false
 
-    #TODO don't crawl recursively until the system is satuated but instead
-    #use a queue to schedule urls to be crawled.
-    #Add urls to the queue in an asynchronous fashion.
-
   import ESpider.HTTP.HyperlinkHelpers
   import ESpider.HTTP.Handler
-  import ESpider.Cache
+
+  alias ESpider.Cache
+  alias ESpider.URLQueue
 
   require Logger
 
   use Calendar
 
-  def crawl(_, _, _, 5), do: :ok
-  def crawl(url, cache, tries) do
-    if (cache |> should_crawl?(url)) do
-      case fetch(url, 0) do
-        {:ok, res} ->
-          extract_content(url, res)
-          one_day_in_seconds = 60 * 60 * 24
-          ttl = DateTime.now_utc |> DateTime.advance!(one_day_in_seconds)
-          cache |> put(url, ttl)
-          {:links, get_links(res.body)}
-        otherwise -> otherwise
-      end
+  def start_link do
+    Task.Supervisor.start_link(name: __MODULE__)
+  end
+
+  def crawl!(url) do
+    __MODULE__ |> Task.Supervisor.start_child(__MODULE__, :crawl, [url])
+  end
+
+  def crawl(url) do
+    Logger.warn("Crawling away...")
+    if (Cache.should_crawl?(url)) do
+      {:ok, res} = fetch(url, 0)
+      extract_content(url, res)
+      one_day_in_seconds = 60 * 60 * 24
+      ttl = DateTime.now_utc |> DateTime.advance!(one_day_in_seconds)
+      Cache.put(url, ttl)
+      get_links(res.body) |> Enum.each(&URLQueue.push_url/1)
     end
   end
 
@@ -36,9 +39,9 @@ defmodule ESpider.Crawler do
   end
 
   defp extract_content(url, response) do
-    tags = ["h1", "h2", "h3", "h4", "h5"]
-    headlines = tags |> Enum.map(&Floki.find(response.body, &1))
-    Logger.info("Website crawled: " <> url)
-    Logger.info(inspect(headlines))
+    #tags = ["h1", "h2", "h3", "h4", "h5"]
+    #headlines = tags |> Enum.map(&Floki.find(response.body, &1))
+    #Logger.info("Website crawled: " <> url)
+    #Logger.info(inspect(headlines))
   end
 end

@@ -1,5 +1,7 @@
 %{"calendar": {:hex, :calendar, "0.7.0"},
   "chronos": {:git, "git://github.com/nurugger07/chronos.git", "289463a917ddbe1a22d451b5ab01299665ee9cfc", []},
+  "dialyze": {:hex, :dialyze, "0.2.0"},
+  "dogma": {:hex, :dogma, "0.0.2"},
   "eredis": {:git, "git://github.com/wooga/eredis.git", "770f828918db710d0c0958c6df63e90a4d341ed7", []},
   "excoveralls": {:hex, :excoveralls, "0.3.10"},
   "exjsx": {:hex, :exjsx, "3.1.0"},
