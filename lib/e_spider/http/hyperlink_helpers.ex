@@ -20,7 +20,7 @@ defmodule ESpider.HTTP.HyperlinkHelpers do
   end
 
   defp syntax_correct?(url) do
-    regex = ~r/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#&\/\/=]*)/
+    regex = ~r/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#&\/\/=]*)/
     url != nil && Regex.match?(regex, url)
   end
 
