@@ -33,7 +33,7 @@ defmodule ESpider.Crawler do
     loop(max_crawlers)
   end
 
-  defp crawl(url) do
+  def crawl(url) do
     if (Cache.should_crawl?(url)) do
       headers = %{"Accept" => "text/html"}
       options = [hackney: [follow_redirect: true, max_redirect: 3]]

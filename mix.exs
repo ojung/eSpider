@@ -2,20 +2,26 @@ defmodule ESpider.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :eSpider,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     escript: [main_module: ESpider],
-     test_coverage: [tool: ExCoveralls],
-     deps: deps]
+    [
+      app: :eSpider,
+      version: "0.0.1",
+      elixir: "~> 1.0",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      escript: [main_module: ESpider],
+      test_coverage: [tool: ExCoveralls],
+      deps: deps
+    ]
   end
 
   def application do
     [
       mod: {ESpider, []},
-      applications: [:logger, :httpoison]
+      applications: [
+        :logger,
+        :httpoison,
+        :kafka_ex
+      ]
     ]
   end
 
@@ -27,9 +33,11 @@ defmodule ESpider.Mixfile do
       {:eredis, github: "wooga/eredis"},
       {:excoveralls, "~> 0.3", only: :test},
       {:floki, "~> 0.3.2"},
-      {:httpoison, "~> 0.7.0"},
       {:hackney, github: "benoitc/hackney", tag: "1.3.0", override: true},
-      {:mock, "~> 0.1.1"}
+      {:httpoison, "~> 0.7.0"},
+      {:kafka_ex, "~> 0.1.0"},
+      {:mock, "~> 0.1.1"},
+      {:uuid, "~> 1.0.0"}
     ]
   end
 end
